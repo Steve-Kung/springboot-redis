@@ -1,0 +1,57 @@
+spring:
+  datasource:
+    username: root
+    password: admin
+    url: jdbc:mysql://localhost:3306/mybatis?serverTimezone=UTC&useSSl=true&useUnicode=true&characterEncoding=utf8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #Spring Boot 默认是不注入这些属性值的，需要自己绑定
+    #druid 数据源专有配置
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 1 FROM DUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: true
+
+    #配置监控统计拦截的filters，stat:监控统计、log4j：日志记录、wall：防御sql注入
+    #如果允许时报错  java.lang.ClassNotFoundException: org.apache.log4j.Priority
+    #则导入 log4j 依赖即可，Maven 地址： https://mvnrepository.com/artifact/log4j/log4j
+    filters: stat,wall,log4j
+    maxPoolPreparedStatementPerConnectionSize: 20
+    useGlobalDataSourceStat: true
+    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: cn.stevekung.config.MysqlConfig
+
+  # 解决Spring Boot集成JPA的Column注解命名字段会自动生成下划线的问题（命名规则）
+  # spring.jpa.hibernate.naming.physical-strategy = org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    # 如果redis需要登录密码的话，需要给出
+    password:
+    #客户端超时时间单位是毫秒 默认是2000
+    timeout: 2000
+    # 对于单机版的Redis，可以使用此参数指定(数据库index),操作使用哪一个数据库
+    # Redis支持多个数据库(默认是16个，可通过配置来修改数据库数量)，并且每个数据库的数据是隔离的，不能
+    # 共享，并且基于单机才有，如果是集群就没有数据库的概念，集群只有一个db0数据库。
+    # redis集群
+    #spring.redis.cluster.nodes = 10.8.109.24:6379, 10.8.109.36:6379
+    database: 0
+  cache:
+    type: redis  # 指定注解缓存使用redis
+
+# 打印报告
+debug: true
